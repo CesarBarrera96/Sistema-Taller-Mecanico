@@ -1,0 +1,72 @@
+<div class="page-header">
+  <h1>Ordenes de Trabajo</h1>
+  <div class="header-actions">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Filtrar estatus</mat-label>
+      <mat-select [(ngModel)]="estatusFilter" (selectionChange)="filtrarEstatus()">
+        <mat-option value="">Todos</mat-option>
+        @for (e of estatusOptions; track e) {
+          <mat-option [value]="e">{{ e }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="abrirDialogo()">
+      <mat-icon>add</mat-icon> Nueva Orden
+    </button>
+  </div>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <table mat-table [dataSource]="datos" class="full-width-table">
+      <ng-container matColumnDef="folio">
+        <th mat-header-cell *matHeaderCellDef>Folio</th>
+        <td mat-cell *matCellDef="let row">{{ row.folio }}</td>
+      </ng-container>
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombreCliente }}</td>
+      </ng-container>
+      <ng-container matColumnDef="vehiculo">
+        <th mat-header-cell *matHeaderCellDef>Vehiculo</th>
+        <td mat-cell *matCellDef="let row">{{ row.vehiculoDescripcion }}</td>
+      </ng-container>
+      <ng-container matColumnDef="estatus">
+        <th mat-header-cell *matHeaderCellDef>Estatus</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip [color]="estatusColor(row.estatus)" highlighted>
+            {{ row.estatus }}
+          </mat-chip>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let row">{{ row.total | currency:'MXN':'symbol':'1.2-2' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="fechaEntrada">
+        <th mat-header-cell *matHeaderCellDef>Fecha Entrada</th>
+        <td mat-cell *matCellDef="let row">{{ row.fechaEntrada | date:'shortDate' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let row">
+        <button mat-icon-button color="primary" (click)="abrirDialogo(row)" matTooltip="Editar">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button *ngIf="siguienteEstatus(row)" mat-icon-button color="accent" (click)="cambiarEstatus(row, siguienteEstatus(row)!)"
+            [matTooltip]="'Avanzar a ' + siguienteEstatus(row)">
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+          <button *ngIf="row.estatus !== 'Cancelada' && row.estatus !== 'Entregada'" mat-icon-button color="warn"
+            (click)="cambiarEstatus(row, EstatusOrdenS.Cancelada)" matTooltip="Cancelar">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div *ngIf="loading" class="loading">Cargando...</div>
+    <div *ngIf="!loading && datos.length === 0" class="empty">No hay ordenes registradas</div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,28 @@
+# Node
+node_modules/
+
+# Build output
+dist/
+bin/
+obj/
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# IDE
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local

@@ -1,0 +1,53 @@
+<div class="page-header">
+  <h1>Empleados</h1>
+  <button mat-raised-button color="primary" (click)="abrirDialogo()">
+    <mat-icon>add</mat-icon> Nuevo Empleado
+  </button>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <table mat-table [dataSource]="datos" class="full-width-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombre }} {{ row.apellidoPaterno }}</td>
+      </ng-container>
+      <ng-container matColumnDef="puesto">
+        <th mat-header-cell *matHeaderCellDef>Puesto</th>
+        <td mat-cell *matCellDef="let row">{{ row.puesto }}</td>
+      </ng-container>
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef>Telefono</th>
+        <td mat-cell *matCellDef="let row">{{ row.telefono }}</td>
+      </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+      </ng-container>
+      <ng-container matColumnDef="activo">
+        <th mat-header-cell *matHeaderCellDef>Activo</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-slide-toggle [checked]="row.activo" (change)="toggleActivo(row)"
+            [matTooltip]="row.activo ? 'Desactivar' : 'Activar'">
+          </mat-slide-toggle>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button color="primary" (click)="abrirDialogo(row)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div *ngIf="loading" class="loading">Cargando...</div>
+    <div *ngIf="!loading && datos.length === 0" class="empty">No hay empleados registrados</div>
+  </mat-card-content>
+</mat-card>

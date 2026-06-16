@@ -1,0 +1,75 @@
+<div class="page-header">
+  <h1>Clientes</h1>
+  <div class="header-actions">
+    <mat-form-field appearance="outline" class="filter-field">
+      <mat-label>Buscar cliente</mat-label>
+      <input matInput [(ngModel)]="filtroTexto" (ngModelChange)="filtrar()" placeholder="Nombre, telefono, email...">
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+    <button mat-raised-button color="primary" (click)="abrirDialogo()">
+      <mat-icon>add</mat-icon> Nuevo Cliente
+    </button>
+  </div>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <table mat-table [dataSource]="datosFiltrados" class="full-width-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef>Nombre</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombre }}</td>
+      </ng-container>
+      <ng-container matColumnDef="apellidoPaterno">
+        <th mat-header-cell *matHeaderCellDef>Apellido Paterno</th>
+        <td mat-cell *matCellDef="let row">{{ row.apellidoPaterno }}</td>
+      </ng-container>
+      <ng-container matColumnDef="apellidoMaterno">
+        <th mat-header-cell *matHeaderCellDef>Apellido Materno</th>
+        <td mat-cell *matCellDef="let row">{{ row.apellidoMaterno }}</td>
+      </ng-container>
+      <ng-container matColumnDef="telefono">
+        <th mat-header-cell *matHeaderCellDef>Telefono</th>
+        <td mat-cell *matCellDef="let row">{{ row.telefono }}</td>
+      </ng-container>
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let row">{{ row.email }}</td>
+      </ng-container>
+      <ng-container matColumnDef="direccion">
+        <th mat-header-cell *matHeaderCellDef>Direccion</th>
+        <td mat-cell *matCellDef="let row">{{ row.direccion }}</td>
+      </ng-container>
+      <ng-container matColumnDef="rfc">
+        <th mat-header-cell *matHeaderCellDef>RFC</th>
+        <td mat-cell *matCellDef="let row">{{ row.rfc }}</td>
+      </ng-container>
+      <ng-container matColumnDef="activo">
+        <th mat-header-cell *matHeaderCellDef>Estatus</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip [color]="row.activo ? 'primary' : 'warn'" selected>
+            {{ row.activo ? 'Activo' : 'Inactivo' }}
+          </mat-chip>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button color="primary" (click)="abrirDialogo(row)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button [color]="row.activo ? 'warn' : 'accent'" (click)="toggleActivo(row)" [matTooltip]="row.activo ? 'Desactivar' : 'Activar'">
+            <mat-icon>{{ row.activo ? 'toggle_on' : 'toggle_off' }}</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div *ngIf="loading" class="loading">Cargando...</div>
+    <div *ngIf="!loading && datosFiltrados.length === 0" class="empty">{{ filtroTexto ? 'Sin resultados' : 'No hay clientes registrados' }}</div>
+  </mat-card-content>
+</mat-card>

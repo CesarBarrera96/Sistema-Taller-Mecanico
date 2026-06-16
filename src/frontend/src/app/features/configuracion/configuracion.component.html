@@ -1,0 +1,69 @@
+<div class="page-header">
+  <h1>Configuracion</h1>
+</div>
+
+<mat-card *ngIf="!loading">
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="guardar()" class="config-form">
+
+      <div class="logo-section">
+        <label class="logo-label">Logo del Taller</label>
+        <div class="logo-preview-container">
+          <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" class="logo-preview" />
+          <img *ngIf="!previewUrl && hasLogo && savedLogoUrl" [src]="savedLogoUrl" alt="Logo actual" class="logo-preview" (error)="hasLogo = false" />
+          <div *ngIf="!previewUrl && (!hasLogo || !savedLogoUrl)" class="logo-placeholder">
+            <mat-icon class="placeholder-icon">build</mat-icon>
+            <span>Sin logo</span>
+          </div>
+        </div>
+        <div class="logo-actions">
+          <button mat-raised-button type="button" (click)="fileInput.click()">
+            <mat-icon>upload</mat-icon> Seleccionar Logo
+          </button>
+          <button *ngIf="selectedFile" mat-icon-button type="button" color="warn" (click)="removeFile()" matTooltip="Quitar seleccion">
+            <mat-icon>close</mat-icon>
+          </button>
+          <button *ngIf="!selectedFile && hasLogo" mat-icon-button type="button" color="warn" (click)="eliminarLogo()" matTooltip="Eliminar logo">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <input id="logoInput" type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden />
+          <span *ngIf="selectedFile" class="file-name">{{ selectedFile.name }}</span>
+        </div>
+      </div>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre del Taller</mat-label>
+        <input matInput formControlName="nombre" maxlength="200" placeholder="Ej: Taller Mecanico Lopez" />
+        <mat-error *ngIf="form.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>RFC</mat-label>
+        <input matInput formControlName="rfc" maxlength="20" placeholder="Ej: XAXX010101000" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Telefono</mat-label>
+        <input matInput formControlName="telefono" maxlength="20" placeholder="Ej: 555-123-4567" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Direccion Completa</mat-label>
+        <textarea matInput formControlName="direccion" maxlength="500" rows="3" placeholder="Ej: Av. Principal 123, Col. Centro, Ciudad"></textarea>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Leyenda de Pie de Pagina</mat-label>
+        <input matInput formControlName="leyendaPiePagina" maxlength="300" placeholder="Ej: Gracias por su preferencia" />
+      </mat-form-field>
+
+      <div class="form-actions">
+        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || saving">
+          <mat-icon>save</mat-icon> {{ saving ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="loading" class="loading">Cargando...</div>

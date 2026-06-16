@@ -1,0 +1,120 @@
+.app-container {
+  height: 100vh;
+}
+
+.sidenav {
+  width: 260px;
+  background-color: #001a3a !important;
+  border-right: none;
+}
+
+.sidenav-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidenav-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #97c1fa;
+}
+
+.sidenav-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.sidenav-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.3px;
+}
+
+::ng-deep .sidenav .mat-mdc-nav-list {
+  padding-top: 8px;
+}
+
+::ng-deep .sidenav .mat-mdc-nav-list .mat-mdc-list-item {
+  color: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 0 24px 24px 0;
+  margin-right: 12px;
+  margin-left: 0;
+  height: 44px !important;
+}
+
+::ng-deep .sidenav .mat-mdc-nav-list .mat-mdc-list-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .sidenav .mat-mdc-nav-list .mat-mdc-list-item .mdc-list-item__primary-text {
+  color: inherit;
+}
+
+::ng-deep .sidenav .mat-mdc-nav-list .mat-mdc-list-item mat-icon {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+::ng-deep .sidenav .mat-mdc-nav-list .mat-mdc-list-item:hover mat-icon {
+  color: #97c1fa !important;
+}
+
+::ng-deep .sidenav .active-link {
+  background: rgba(20, 112, 213, 0.25) !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .sidenav .active-link mat-icon {
+  color: #97c1fa !important;
+}
+
+::ng-deep .sidenav .active-link .mdc-list-item__primary-text {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.config-link {
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #ffffff !important;
+  color: #001a3a !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.sidenav-toggle {
+  margin-right: 8px;
+  color: #001a3a !important;
+}
+
+.top-bar-spacer {
+  flex: 1;
+}
+
+.user-info {
+  margin-right: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 26, 58, 0.7);
+}
+
+.content-area {
+  padding: 24px 32px;
+  overflow-y: auto;
+  background-color: #f4f6fa;
+  min-height: calc(100vh - 64px);
+}

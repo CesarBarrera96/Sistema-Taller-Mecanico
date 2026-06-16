@@ -1,0 +1,95 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(0, 86, 176, 0.12);
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+  color: #001a3a;
+}
+
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 600px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.logo-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.logo-preview-container {
+  width: 120px;
+  height: 120px;
+  border: 2px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.logo-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: rgba(0, 0, 0, 0.38);
+  font-size: 12px;
+}
+
+.placeholder-icon {
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
+}
+
+.logo-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.file-name {
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.loading {
+  text-align: center;
+  padding: 24px;
+  color: rgba(0, 0, 0, 0.54);
+}

@@ -1,0 +1,52 @@
+.page-title {
+  margin: 0 0 24px;
+  font-size: 26px;
+  font-weight: 600;
+  color: #001a3a;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  cursor: default;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.stat-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+}
+
+.stat-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 14px;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-count {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #001a3a;
+}
+
+.stat-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(0, 26, 58, 0.55);
+}

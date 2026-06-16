@@ -1,0 +1,106 @@
+<div class="page-header">
+  <h1>Facturas</h1>
+  <button mat-raised-button color="primary" (click)="abrirDialogo()">
+    <mat-icon>add</mat-icon> Nueva Factura
+  </button>
+</div>
+
+<mat-card>
+  <mat-card-content>
+    <table mat-table [dataSource]="datos" class="full-width-table" multiTemplateDataRows>
+      <ng-container matColumnDef="folio">
+        <th mat-header-cell *matHeaderCellDef>Folio</th>
+        <td mat-cell *matCellDef="let row">{{ row.folio }}</td>
+      </ng-container>
+      <ng-container matColumnDef="orden">
+        <th mat-header-cell *matHeaderCellDef>Orden</th>
+        <td mat-cell *matCellDef="let row">{{ row.ordenFolio }}</td>
+      </ng-container>
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let row">{{ row.nombreCliente }}</td>
+      </ng-container>
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let row">{{ row.total | currency:'MXN':'symbol':'1.2-2' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="estatus">
+        <th mat-header-cell *matHeaderCellDef>Estatus</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip [color]="estatusColor(row.estatus)" highlighted>
+            {{ row.estatus }}
+          </mat-chip>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="fechaFacturacion">
+        <th mat-header-cell *matHeaderCellDef>Fecha</th>
+        <td mat-cell *matCellDef="let row">{{ row.fechaFacturacion | date:'shortDate' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="verDetalles(row)" matTooltip="Ver detalles" color="primary">
+            <mat-icon>{{ facturaSeleccionada?.id === row.id ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+          <button mat-icon-button color="primary" (click)="editarFactura(row)" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="descargarPdf(row)" matTooltip="Descargar PDF" color="primary">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </button>
+          <button *ngIf="row.estatus === 'Pendiente'" mat-icon-button color="accent" (click)="pagar(row)" matTooltip="Pagar">
+            <mat-icon>payments</mat-icon>
+          </button>
+          <button *ngIf="row.estatus === 'Pendiente'" mat-icon-button color="warn" (click)="cancelar(row)" matTooltip="Cancelar">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="detalle">
+        <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+          <div *ngIf="facturaSeleccionada?.id === row.id" class="detalle-section" @detalleExpand>
+            <div class="detalle-header">
+              <h3>Detalle Factura {{ facturaSeleccionada!.folio }}</h3>
+            </div>
+            <table mat-table [dataSource]="facturaSeleccionada!.detalles" class="detalle-table">
+              <ng-container matColumnDef="concepto">
+                <th mat-header-cell *matHeaderCellDef class="detalle-col-concepto">Concepto</th>
+                <td mat-cell *matCellDef="let d" class="detalle-col-concepto">{{ d.concepto }}</td>
+              </ng-container>
+              <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef class="detalle-col-cantidad">Cantidad</th>
+                <td mat-cell *matCellDef="let d" class="detalle-col-cantidad">{{ d.cantidad }}</td>
+              </ng-container>
+              <ng-container matColumnDef="precioUnitario">
+                <th mat-header-cell *matHeaderCellDef class="detalle-col-precio">Precio Unitario</th>
+                <td mat-cell *matCellDef="let d" class="detalle-col-precio">{{ d.precioUnitario | currency:'MXN':'symbol':'1.2-2' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="subtotal">
+                <th mat-header-cell *matHeaderCellDef class="detalle-col-subtotal">Subtotal</th>
+                <td mat-cell *matCellDef="let d" class="detalle-col-subtotal">{{ d.subtotal | currency:'MXN':'symbol':'1.2-2' }}</td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="['concepto', 'cantidad', 'precioUnitario', 'subtotal']"></tr>
+              <tr mat-row *matRowDef="let d; columns: ['concepto', 'cantidad', 'precioUnitario', 'subtotal'];"></tr>
+            </table>
+            <div class="totales">
+              <span>Subtotal: {{ facturaSeleccionada!.subtotal | currency:'MXN':'symbol':'1.2-2' }}</span>
+              <span>IVA (16%): {{ facturaSeleccionada!.iva | currency:'MXN':'symbol':'1.2-2' }}</span>
+              <span class="total">Total: {{ facturaSeleccionada!.total | currency:'MXN':'symbol':'1.2-2' }}</span>
+            </div>
+            <div class="detalle-footer">
+              <button mat-raised-button color="primary" (click)="editarFactura(facturaSeleccionada!)" matTooltip="Editar factura">
+                <mat-icon>edit</mat-icon> Editar
+              </button>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['detalle'];" class="detalle-row"></tr>
+    </table>
+
+    <div *ngIf="loading" class="loading">Cargando...</div>
+    <div *ngIf="!loading && datos.length === 0" class="empty">No hay facturas registradas</div>
+  </mat-card-content>
+</mat-card>
