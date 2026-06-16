@@ -1,11 +1,13 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { LoginDto, AuthResponse } from '../models/auth.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private router = inject(Router);
   private readonly TOKEN_KEY = 'taller_token';
   private readonly USER_KEY = 'taller_user';
 
@@ -28,6 +30,7 @@ export class AuthService {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this._currentUser.set(null);
+    this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
