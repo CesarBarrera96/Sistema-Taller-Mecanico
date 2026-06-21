@@ -35,7 +35,9 @@ export class ConfiguracionComponent implements OnInit {
       rfc: ['', [Validators.maxLength(20)]],
       telefono: ['', [Validators.maxLength(20)]],
       direccion: ['', [Validators.maxLength(500)]],
-      leyendaPiePagina: ['', [Validators.maxLength(300)]]
+      leyendaPiePagina: ['', [Validators.maxLength(300)]],
+      nombreImpuesto: ['IVA', [Validators.required, Validators.maxLength(30)]],
+      porcentajeImpuesto: [16, [Validators.required, Validators.min(0), Validators.max(100)]]
     });
   }
 
@@ -52,7 +54,9 @@ export class ConfiguracionComponent implements OnInit {
           rfc: config.rfc ?? '',
           telefono: config.telefono ?? '',
           direccion: config.direccion ?? '',
-          leyendaPiePagina: config.leyendaPiePagina ?? ''
+          leyendaPiePagina: config.leyendaPiePagina ?? '',
+          nombreImpuesto: config.nombreImpuesto ?? 'IVA',
+          porcentajeImpuesto: config.porcentajeImpuesto ?? 16
         });
         this.hasLogo = !!config.logoRuta;
         this.loading = false;

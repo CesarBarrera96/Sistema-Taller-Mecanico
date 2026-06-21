@@ -15,6 +15,9 @@ public class FacturaPdfData
     public string? TallerLogoRuta { get; set; }
     public string? TallerLeyenda { get; set; }
 
+    public string NombreImpuesto { get; set; } = "IVA";
+    public decimal PorcentajeImpuesto { get; set; } = 16m;
+
     public string ClienteNombre { get; set; } = string.Empty;
     public string? ClienteTelefono { get; set; }
     public string? ClienteEmail { get; set; }

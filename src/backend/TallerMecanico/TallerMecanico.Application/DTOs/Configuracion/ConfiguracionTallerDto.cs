@@ -9,6 +9,8 @@ public class ConfiguracionTallerDto
     public string? Direccion { get; set; }
     public string? LeyendaPiePagina { get; set; }
     public string? LogoRuta { get; set; }
+    public string NombreImpuesto { get; set; } = "IVA";
+    public decimal PorcentajeImpuesto { get; set; } = 16m;
 }
 
 public class UpdateConfiguracionTallerDto
@@ -18,4 +20,6 @@ public class UpdateConfiguracionTallerDto
     public string? Telefono { get; set; }
     public string? Direccion { get; set; }
     public string? LeyendaPiePagina { get; set; }
+    public string? NombreImpuesto { get; set; }
+    public decimal? PorcentajeImpuesto { get; set; }
 }

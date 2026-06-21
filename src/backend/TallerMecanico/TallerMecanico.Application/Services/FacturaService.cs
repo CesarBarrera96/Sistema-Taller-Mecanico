@@ -14,7 +14,6 @@ public class FacturaService : IFacturaService
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
     private readonly IConfiguracionTallerService _configService;
-    private const decimal IvaRate = 0.16m;
 
     public FacturaService(IRepository<Factura> repository, IApplicationDbContext context, IMapper mapper, IConfiguracionTallerService configService)
     {
@@ -22,6 +21,12 @@ public class FacturaService : IFacturaService
         _context = context;
         _mapper = mapper;
         _configService = configService;
+    }
+
+    private async Task<decimal> GetIvaRateAsync()
+    {
+        var config = await _configService.GetAsync();
+        return config.PorcentajeImpuesto / 100m;
     }
 
     public async Task<IEnumerable<FacturaDto>> GetAllAsync()
@@ -54,7 +59,8 @@ public class FacturaService : IFacturaService
         var year = DateTime.Now.Year;
         var count = await _context.Facturas.CountAsync(f => f.FechaFacturacion.Year == year);
 
-        var subtotal = orden.Total / (1 + IvaRate);
+        var ivaRate = await GetIvaRateAsync();
+        var subtotal = orden.Total / (1 + ivaRate);
         var iva = orden.Total - subtotal;
         var total = orden.Total;
 
@@ -140,7 +146,7 @@ public class FacturaService : IFacturaService
             }
 
             factura.Subtotal = factura.Detalles.Sum(d => d.Subtotal);
-            factura.IVA = factura.Subtotal * IvaRate;
+            factura.IVA = factura.Subtotal * await GetIvaRateAsync();
             factura.Total = factura.Subtotal + factura.IVA;
         }
 
@@ -177,6 +183,8 @@ public class FacturaService : IFacturaService
             TallerDireccion = config.Direccion,
             TallerLogoRuta = config.LogoRuta,
             TallerLeyenda = config.LeyendaPiePagina,
+            NombreImpuesto = config.NombreImpuesto,
+            PorcentajeImpuesto = config.PorcentajeImpuesto,
             ClienteNombre = $"{cliente.Nombre} {cliente.ApellidoPaterno}{(cliente.ApellidoMaterno != null ? " " + cliente.ApellidoMaterno : "")}",
             ClienteTelefono = cliente.Telefono,
             ClienteEmail = cliente.Email,

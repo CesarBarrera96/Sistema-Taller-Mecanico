@@ -53,6 +53,8 @@ public class CitaService : ICitaService
 
     public async Task<CitaDto> CreateAsync(CreateCitaDto dto)
     {
+        await ValidateNoOverlapAsync(dto.EmpleadoId, dto.VehiculoId, dto.FechaHora, dto.DuracionMinutos);
+
         var cita = _mapper.Map<Cita>(dto);
         cita.Estatus = EstatusCita.Programada;
         await _repository.AddAsync(cita);
@@ -75,8 +77,43 @@ public class CitaService : ICitaService
         if (dto.Motivo != null) cita.Motivo = dto.Motivo;
         if (dto.Observaciones != null) cita.Observaciones = dto.Observaciones;
 
+        var empleadoId = dto.EmpleadoId ?? cita.EmpleadoId;
+        var vehiculoId = cita.VehiculoId;
+        var fechaHora = dto.FechaHora ?? cita.FechaHora;
+        var duracion = dto.DuracionMinutos ?? cita.DuracionMinutos;
+        await ValidateNoOverlapAsync(empleadoId, vehiculoId, fechaHora, duracion, id);
+
         await _repository.UpdateAsync(cita);
         return _mapper.Map<CitaDto>(cita);
+    }
+
+    private async Task ValidateNoOverlapAsync(int? empleadoId, int vehiculoId, DateTime fechaHora, int duracionMinutos, int? excludeCitaId = null)
+    {
+        var nuevaInicio = fechaHora;
+        var nuevaFin = fechaHora.AddMinutes(duracionMinutos);
+
+        var query = _context.Citas
+            .Where(c => c.Estatus != EstatusCita.Cancelada);
+
+        if (excludeCitaId.HasValue)
+            query = query.Where(c => c.Id != excludeCitaId.Value);
+
+        var existentes = await query.ToListAsync();
+
+        foreach (var c in existentes)
+        {
+            var existenteInicio = c.FechaHora;
+            var existenteFin = c.FechaHora.AddMinutes(c.DuracionMinutos);
+
+            var seEmpalma = nuevaInicio < existenteFin && nuevaFin > existenteInicio;
+            if (!seEmpalma) continue;
+
+            if (empleadoId.HasValue && c.EmpleadoId == empleadoId.Value)
+                throw new InvalidOperationException($"El empleado ya tiene una cita programada de {existenteInicio:HH:mm} a {existenteFin:HH:mm} el {existenteInicio:dd/MM/yyyy}");
+
+            if (c.VehiculoId == vehiculoId)
+                throw new InvalidOperationException($"El vehiculo ya tiene una cita programada de {existenteInicio:HH:mm} a {existenteFin:HH:mm} el {existenteInicio:dd/MM/yyyy}");
+        }
     }
 
     public async Task DeleteAsync(int id)

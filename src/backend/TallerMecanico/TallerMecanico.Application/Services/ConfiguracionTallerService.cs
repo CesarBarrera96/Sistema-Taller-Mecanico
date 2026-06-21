@@ -20,7 +20,11 @@ public class ConfiguracionTallerService : IConfiguracionTallerService
     public async Task<ConfiguracionTallerDto> GetAsync()
     {
         var all = await _repository.GetAllAsync();
-        var config = all.FirstOrDefault() ?? new ConfiguracionTaller { Nombre = "Taller Mecanico" };
+        var config = all.FirstOrDefault() ?? new ConfiguracionTaller { Nombre = "Taller Mecanico", NombreImpuesto = "IVA", PorcentajeImpuesto = 16m };
+
+        if (string.IsNullOrEmpty(config.NombreImpuesto)) config.NombreImpuesto = "IVA";
+        if (config.PorcentajeImpuesto == 0) config.PorcentajeImpuesto = 16m;
+
         return _mapper.Map<ConfiguracionTallerDto>(config);
     }
 

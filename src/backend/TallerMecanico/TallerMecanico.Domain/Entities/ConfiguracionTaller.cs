@@ -10,4 +10,6 @@ public class ConfiguracionTaller : BaseEntity
     public string? Direccion { get; set; }
     public string? LeyendaPiePagina { get; set; }
     public string? LogoRuta { get; set; }
+    public string NombreImpuesto { get; set; } = "IVA";
+    public decimal PorcentajeImpuesto { get; set; } = 16m;
 }

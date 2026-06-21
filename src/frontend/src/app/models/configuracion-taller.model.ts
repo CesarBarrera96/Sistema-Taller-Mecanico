@@ -6,6 +6,8 @@ export interface ConfiguracionTaller {
   direccion?: string;
   leyendaPiePagina?: string;
   logoRuta?: string;
+  nombreImpuesto: string;
+  porcentajeImpuesto: number;
 }
 
 export interface UpdateConfiguracionTallerDto {
@@ -14,4 +16,6 @@ export interface UpdateConfiguracionTallerDto {
   telefono?: string;
   direccion?: string;
   leyendaPiePagina?: string;
+  nombreImpuesto?: string;
+  porcentajeImpuesto?: number;
 }

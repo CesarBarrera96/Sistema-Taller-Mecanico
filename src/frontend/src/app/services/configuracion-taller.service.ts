@@ -9,7 +9,7 @@ export class ConfiguracionTallerService {
   private url = `${environment.apiUrl}/configuracion`;
   private baseUrl = environment.apiUrl.replace('/api', '');
 
-  private _config = signal<ConfiguracionTaller>({ id: 0, nombre: 'Taller Mecanico' });
+  private _config = signal<ConfiguracionTaller>({ id: 0, nombre: 'Taller Mecanico', nombreImpuesto: 'IVA', porcentajeImpuesto: 16 });
   private _logoVersion = signal(Date.now());
 
   readonly config = this._config.asReadonly();

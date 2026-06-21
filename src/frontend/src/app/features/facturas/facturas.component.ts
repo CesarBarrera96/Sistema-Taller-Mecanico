@@ -19,6 +19,7 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { FacturaService } from '../../services/factura.service';
 import { OrdenService } from '../../services/orden.service';
+import { ConfiguracionTallerService } from '../../services/configuracion-taller.service';
 import { Factura, CreateFacturaDto, PagarFacturaDto, EstatusFactura, UpdateFacturaDto, FacturaDetalleDto, UpdateFacturaDetalleDto } from '../../models/factura.model';
 import { OrdenTrabajo } from '../../models/orden-trabajo.model';
 
@@ -46,6 +47,7 @@ export class FacturasComponent implements OnInit {
   private ordenService = inject(OrdenService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  configService = inject(ConfiguracionTallerService);
 
   datos: Factura[] = [];
   ordenes: OrdenTrabajo[] = [];
@@ -315,8 +317,8 @@ export class PagarDialogComponent {
         </div>
         <div class="totales-preview">
           <span>Subtotal: {{ totalSubtotal | currency:'MXN':'symbol':'1.2-2' }}</span>
-          <span>IVA (16%): {{ (totalSubtotal * 0.16) | currency:'MXN':'symbol':'1.2-2' }}</span>
-          <strong>Total: {{ (totalSubtotal * 1.16) | currency:'MXN':'symbol':'1.2-2' }}</strong>
+          <span>{{ config().nombreImpuesto }} ({{ config().porcentajeImpuesto }}%): {{ (totalSubtotal * config().porcentajeImpuesto / 100) | currency:'MXN':'symbol':'1.2-2' }}</span>
+          <strong>Total: {{ (totalSubtotal * (1 + config().porcentajeImpuesto / 100)) | currency:'MXN':'symbol':'1.2-2' }}</strong>
         </div>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Metodo de Pago</mat-label>
@@ -353,6 +355,7 @@ export class PagarDialogComponent {
 })
 export class EditarFacturaDialogComponent {
   form: FormGroup;
+  config = inject(ConfiguracionTallerService).config;
   private ref = inject(MatDialogRef<EditarFacturaDialogComponent>);
 
   constructor() {

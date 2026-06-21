@@ -84,7 +84,7 @@
             </table>
             <div class="totales">
               <span>Subtotal: {{ facturaSeleccionada!.subtotal | currency:'MXN':'symbol':'1.2-2' }}</span>
-              <span>IVA (16%): {{ facturaSeleccionada!.iva | currency:'MXN':'symbol':'1.2-2' }}</span>
+              <span>{{ configService.config().nombreImpuesto }} ({{ configService.config().porcentajeImpuesto }}%): {{ facturaSeleccionada!.iva | currency:'MXN':'symbol':'1.2-2' }}</span>
               <span class="total">Total: {{ facturaSeleccionada!.total | currency:'MXN':'symbol':'1.2-2' }}</span>
             </div>
             <div class="detalle-footer">

@@ -179,7 +179,7 @@ public class FacturaPdfService : IFacturaPdfService
             });
             col.Item().Row(r =>
             {
-                r.ConstantItem(110).AlignRight().Text("IVA (16%):").SemiBold().FontSize(10);
+                r.ConstantItem(110).AlignRight().Text($"{data.NombreImpuesto} ({data.PorcentajeImpuesto}%):").SemiBold().FontSize(10);
                 r.ConstantItem(10);
                 r.RelativeItem().AlignRight().Text(data.IVA.ToString("C")).FontSize(10);
             });

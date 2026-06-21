@@ -88,6 +88,19 @@
   padding-top: 8px;
 }
 
+.impuesto-row {
+  display: flex;
+  gap: 16px;
+}
+
+.impuesto-nombre {
+  flex: 1;
+}
+
+.impuesto-porcentaje {
+  flex: 1;
+}
+
 .loading {
   text-align: center;
   padding: 24px;
