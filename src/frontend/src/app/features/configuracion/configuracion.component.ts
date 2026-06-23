@@ -35,7 +35,7 @@ export class ConfiguracionComponent implements OnInit {
   activandoLicencia = false;
 
   readonly whatsappNumber = '528116190278';
-  readonly whatsappMessage = encodeURIComponent('Hola, necesito renovar mi licencia anual del Sistema Taller Mecanico. Me podrias proporcionar una nueva clave de activacion?');
+  readonly whatsappMessage = encodeURIComponent('Hola, necesito una licencia del Sistema Taller Mecanico. Me podrias proporcionar una clave de activacion?');
   readonly mercadoLibreUrl = 'https://www.mercadolibre.com.mx';
 
   constructor() {
