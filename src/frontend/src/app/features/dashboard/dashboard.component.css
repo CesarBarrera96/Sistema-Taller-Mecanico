@@ -14,7 +14,6 @@
 .stat-card {
   cursor: default;
   border-radius: 12px;
-  overflow: hidden;
 }
 
 .stat-content {
@@ -30,7 +29,17 @@
   justify-content: center;
   width: 64px;
   height: 64px;
-  border-radius: 14px;
+  min-width: 64px;
+  min-height: 64px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.stat-icon .mat-icon {
+  font-size: 36px !important;
+  width: 36px;
+  height: 36px;
+  line-height: 36px;
 }
 
 .stat-info {

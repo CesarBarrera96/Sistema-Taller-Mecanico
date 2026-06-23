@@ -14,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { EmpleadoService } from '../../services/empleado.service';
 import { Empleado, CreateEmpleadoDto, UpdateEmpleadoDto } from '../../models/empleado.model';
+import { LicenciaService } from '../../services/licencia.service';
 
 @Component({
   selector: 'app-empleados',
@@ -26,6 +27,7 @@ export class EmpleadosComponent implements OnInit {
   private service = inject(EmpleadoService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private licenciaService = inject(LicenciaService);
 
   datos: Empleado[] = [];
   displayedColumns = ['id', 'nombre', 'puesto', 'telefono', 'email', 'activo', 'acciones'];
@@ -39,6 +41,7 @@ export class EmpleadosComponent implements OnInit {
   }
 
   toggleActivo(empleado: Empleado): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dto: UpdateEmpleadoDto = {
       nombre: empleado.nombre,
       apellidoPaterno: empleado.apellidoPaterno,
@@ -58,6 +61,7 @@ export class EmpleadosComponent implements OnInit {
   }
 
   abrirDialogo(empleado?: Empleado): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(EmpleadosDialogComponent, {
       width: '500px',
       data: {

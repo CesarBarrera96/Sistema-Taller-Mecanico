@@ -12,4 +12,7 @@ public class ConfiguracionTaller : BaseEntity
     public string? LogoRuta { get; set; }
     public string NombreImpuesto { get; set; } = "IVA";
     public decimal PorcentajeImpuesto { get; set; } = 16m;
+    public string? ClaveLicencia { get; set; }
+    public DateTime? FechaExpiracionLicencia { get; set; }
+    public DateTime? UltimoAccesoRegistrado { get; set; }
 }

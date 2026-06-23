@@ -22,6 +22,7 @@ import { OrdenService } from '../../services/orden.service';
 import { ConfiguracionTallerService } from '../../services/configuracion-taller.service';
 import { Factura, CreateFacturaDto, PagarFacturaDto, EstatusFactura, UpdateFacturaDto, FacturaDetalleDto, UpdateFacturaDetalleDto } from '../../models/factura.model';
 import { OrdenTrabajo } from '../../models/orden-trabajo.model';
+import { LicenciaService } from '../../services/licencia.service';
 
 @Component({
   selector: 'app-facturas',
@@ -48,6 +49,7 @@ export class FacturasComponent implements OnInit {
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   configService = inject(ConfiguracionTallerService);
+  private licenciaService = inject(LicenciaService);
 
   datos: Factura[] = [];
   ordenes: OrdenTrabajo[] = [];
@@ -64,6 +66,7 @@ export class FacturasComponent implements OnInit {
   }
 
   abrirDialogo(): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(FacturasDialogComponent, {
       width: '450px',
       data: { ordenTrabajoId: 0, ordenes: this.ordenes }
@@ -79,6 +82,7 @@ export class FacturasComponent implements OnInit {
   }
 
   pagar(factura: Factura): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(PagarDialogComponent, { width: '400px', data: { folio: factura.folio } });
 
     dialogRef.afterClosed().subscribe((result: PagarFacturaDto | null) => {
@@ -91,6 +95,7 @@ export class FacturasComponent implements OnInit {
   }
 
   cancelar(factura: Factura): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     if (confirm('¿Cancelar esta factura?')) {
       this.service.cancelar(factura.id).subscribe({
         next: () => { this.snackBar.open('Factura cancelada', 'OK', { duration: 3000 }); this.cargar(); },
@@ -123,6 +128,7 @@ export class FacturasComponent implements OnInit {
   }
 
   editarFactura(factura: Factura): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(EditarFacturaDialogComponent, {
       width: '700px',
       data: { metodoPago: factura.metodoPago, observaciones: factura.observaciones, detalles: factura.detalles }

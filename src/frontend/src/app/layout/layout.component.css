@@ -6,6 +6,8 @@
   width: 260px;
   background-color: #001a3a !important;
   border-right: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidenav-header {
@@ -86,6 +88,24 @@
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+.sidenav-footer {
+  padding: 12px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: auto;
+}
+
+.terminos-link {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.terminos-link:hover {
+  color: rgba(255, 255, 255, 0.65);
+}
+
 .top-bar {
   position: sticky;
   top: 0;
@@ -117,4 +137,185 @@
   overflow-y: auto;
   background-color: #f4f6fa;
   min-height: calc(100vh - 64px);
+}
+
+.licencia-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.licencia-dialog {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 460px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+  animation: dialogFadeIn 0.3s ease-out;
+}
+
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.licencia-dialog-icon {
+  font-size: 56px;
+  width: 56px;
+  height: 56px;
+  color: #f59e0b;
+  margin-bottom: 16px;
+}
+
+.licencia-dialog h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #92400e;
+  margin: 0 0 12px 0;
+  line-height: 1.3;
+}
+
+.licencia-dialog p {
+  font-size: 15px;
+  color: #57534e;
+  line-height: 1.6;
+  margin: 0 0 28px 0;
+}
+
+.licencia-dialog-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: #1d4ed8;
+  color: #ffffff;
+  transition: background 0.2s;
+}
+
+.licencia-dialog-btn:hover {
+  background: #1e40af;
+}
+
+.licencia-dialog-btn mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.terminos-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: dialogFadeIn 0.25s ease-out;
+}
+
+.terminos-dialog {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 560px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+  animation: dialogFadeIn 0.3s ease-out;
+}
+
+.terminos-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0, 26, 58, 0.08);
+  flex-shrink: 0;
+}
+
+.terminos-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #001a3a;
+  margin: 0;
+}
+
+.terminos-header .mat-icon {
+  color: rgba(0, 26, 58, 0.4);
+}
+
+.terminos-header button:hover .mat-icon {
+  color: #001a3a;
+}
+
+.terminos-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.terminos-body h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1d4ed8;
+  margin: 0 0 6px;
+}
+
+.terminos-body p {
+  font-size: 13px;
+  color: #334155;
+  line-height: 1.7;
+  margin: 0 0 18px;
+}
+
+.terminos-body h3:not(:first-child) {
+  margin-top: 4px;
+}
+
+.terminos-footer {
+  padding: 16px 24px;
+  border-top: 1px solid rgba(0, 26, 58, 0.08);
+  display: flex;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
+.terminos-close-btn {
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: #1d4ed8;
+  color: #ffffff;
+  transition: background 0.2s;
+}
+
+.terminos-close-btn:hover {
+  background: #1e40af;
 }

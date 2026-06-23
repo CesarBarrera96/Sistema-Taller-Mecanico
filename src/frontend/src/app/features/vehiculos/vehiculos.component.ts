@@ -16,6 +16,7 @@ import { VehiculoService } from '../../services/vehiculo.service';
 import { ClienteService } from '../../services/cliente.service';
 import { Vehiculo, CreateVehiculoDto } from '../../models/vehiculo.model';
 import { Cliente } from '../../models/cliente.model';
+import { LicenciaService } from '../../services/licencia.service';
 import { debounceTime, distinctUntilChanged, map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -31,6 +32,7 @@ export class VehiculosComponent implements OnInit {
   private clienteService = inject(ClienteService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private licenciaService = inject(LicenciaService);
 
   datos: Vehiculo[] = [];
   datosFiltrados: Vehiculo[] = [];
@@ -76,6 +78,7 @@ export class VehiculosComponent implements OnInit {
   }
 
   eliminar(id: number): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     if (confirm('¿Eliminar este vehiculo?')) {
       this.vehiculoService.delete(id).subscribe({
         next: () => this.cargar(),
@@ -85,6 +88,7 @@ export class VehiculosComponent implements OnInit {
   }
 
   abrirDialogo(vehiculo?: Vehiculo): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(VehiculosDialogComponent, {
       width: '500px',
       data: {

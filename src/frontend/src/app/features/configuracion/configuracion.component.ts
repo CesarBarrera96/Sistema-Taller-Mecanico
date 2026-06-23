@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,16 +9,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ConfiguracionTallerService } from '../../services/configuracion-taller.service';
+import { LicenciaService } from '../../services/licencia.service';
 
 @Component({
   selector: 'app-configuracion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatCardModule, MatInputModule, MatFormFieldModule, MatButtonModule, MatIconModule, MatSnackBarModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, MatCardModule, MatInputModule, MatFormFieldModule, MatButtonModule, MatIconModule, MatSnackBarModule],
   templateUrl: './configuracion.component.html',
   styleUrl: './configuracion.component.css'
 })
 export class ConfiguracionComponent implements OnInit {
   private service = inject(ConfiguracionTallerService);
+  private licenciaService = inject(LicenciaService);
   private fb = inject(FormBuilder);
   private snackBar = inject(MatSnackBar);
 
@@ -28,6 +30,13 @@ export class ConfiguracionComponent implements OnInit {
   hasLogo = false;
   loading = false;
   saving = false;
+
+  licenciaToken = '';
+  activandoLicencia = false;
+
+  readonly whatsappNumber = '528116190278';
+  readonly whatsappMessage = encodeURIComponent('Hola, necesito renovar mi licencia anual del Sistema Taller Mecanico. Me podrias proporcionar una nueva clave de activacion?');
+  readonly mercadoLibreUrl = 'https://www.mercadolibre.com.mx';
 
   constructor() {
     this.form = this.fb.group({
@@ -43,6 +52,28 @@ export class ConfiguracionComponent implements OnInit {
 
   get savedLogoUrl(): string | null {
     return this.service.logoUrl();
+  }
+
+  get licenciaActiva(): boolean {
+    return this.licenciaService.licenciaActiva();
+  }
+
+  get fechaExpiracionLicencia(): string | null {
+    const fecha = this.licenciaService.fechaExpiracion();
+    if (!fecha) return null;
+    return new Date(fecha).toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  get diasRestantes(): number | null {
+    return this.licenciaService.diasRestantes();
+  }
+
+  get minutosRestantes(): number | null {
+    return this.licenciaService.minutosRestantes();
+  }
+
+  get estadoLicencia(): string {
+    return this.licenciaService.estadoLicencia();
   }
 
   ngOnInit(): void {
@@ -63,6 +94,7 @@ export class ConfiguracionComponent implements OnInit {
       },
       error: () => { this.loading = false; }
     });
+    this.licenciaService.checkStatus().subscribe();
   }
 
   onFileSelected(event: Event): void {
@@ -83,7 +115,7 @@ export class ConfiguracionComponent implements OnInit {
   }
 
   eliminarLogo(): void {
-    if (!confirm('¿Eliminar el logo del taller? Se restaurara el icono predeterminado.')) return;
+    if (!confirm('Eliminar el logo del taller? Se restaurara el icono predeterminado.')) return;
     this.service.deleteLogo().subscribe({
       next: () => {
         this.hasLogo = false;
@@ -130,6 +162,39 @@ export class ConfiguracionComponent implements OnInit {
         this.snackBar.open(this.extraerError(e), 'OK', { duration: 5000 });
       }
     });
+  }
+
+  activarLicencia(): void {
+    const token = this.licenciaToken.trim();
+    if (!token) {
+      this.snackBar.open('Ingrese la clave de activacion', 'OK', { duration: 3000 });
+      return;
+    }
+    this.activandoLicencia = true;
+    this.licenciaService.activar(token).subscribe({
+      next: (status) => {
+        this.activandoLicencia = false;
+        this.licenciaToken = '';
+        if (status.activa) {
+          this.snackBar.open('Licencia activada exitosamente!', 'OK', { duration: 3000 });
+        } else {
+          this.snackBar.open('La licencia no pudo ser activada', 'OK', { duration: 5000 });
+        }
+      },
+      error: (e: HttpErrorResponse) => {
+        this.activandoLicencia = false;
+        const msg = e.error?.mensaje || 'Error al activar la licencia';
+        this.snackBar.open(msg, 'OK', { duration: 5000 });
+      }
+    });
+  }
+
+  openWhatsapp(): void {
+    window.open(`https://wa.me/${this.whatsappNumber}?text=${this.whatsappMessage}`, '_blank');
+  }
+
+  openMercadoLibre(): void {
+    window.open(this.mercadoLibreUrl, '_blank');
   }
 
   private extraerError(e: HttpErrorResponse): string {

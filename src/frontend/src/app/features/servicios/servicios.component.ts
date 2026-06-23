@@ -14,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ServicioService } from '../../services/servicio.service';
 import { Servicio, CreateServicioDto, UpdateServicioDto } from '../../models/servicio.model';
+import { LicenciaService } from '../../services/licencia.service';
 
 @Component({
   selector: 'app-servicios',
@@ -26,6 +27,7 @@ export class ServiciosComponent implements OnInit {
   private service = inject(ServicioService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private licenciaService = inject(LicenciaService);
 
   datos: Servicio[] = [];
   displayedColumns = ['id', 'nombre', 'descripcion', 'precioManoObra', 'activo', 'acciones'];
@@ -39,6 +41,7 @@ export class ServiciosComponent implements OnInit {
   }
 
   eliminar(id: number): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     if (confirm('¿Eliminar este servicio?')) {
       this.service.delete(id).subscribe({
         next: () => this.cargar(),
@@ -48,6 +51,7 @@ export class ServiciosComponent implements OnInit {
   }
 
   abrirDialogo(servicio?: Servicio): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(ServiciosDialogComponent, {
       width: '500px',
       data: {

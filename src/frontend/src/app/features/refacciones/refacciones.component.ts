@@ -15,6 +15,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RefaccionService } from '../../services/refaccion.service';
 import { Refaccion, CreateRefaccionDto, UpdateRefaccionDto, InventarioMovimientoDto } from '../../models/refaccion.model';
+import { LicenciaService } from '../../services/licencia.service';
 
 @Component({
   selector: 'app-refacciones',
@@ -27,6 +28,7 @@ export class RefaccionesComponent implements OnInit {
   private service = inject(RefaccionService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private licenciaService = inject(LicenciaService);
 
   datos: Refaccion[] = [];
   displayedColumns = ['id', 'codigo', 'nombre', 'precioVenta', 'stockActual', 'stockMinimo', 'activo', 'acciones'];
@@ -44,6 +46,7 @@ export class RefaccionesComponent implements OnInit {
   toggleStockBajo(): void { this.filtroStockBajo = !this.filtroStockBajo; this.cargar(); }
 
   abrirDialogo(refaccion?: Refaccion): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(RefaccionesDialogComponent, {
       width: '500px',
       data: {
@@ -77,6 +80,7 @@ export class RefaccionesComponent implements OnInit {
   }
 
   abrirMovimiento(refaccion: Refaccion): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(MovimientoDialogComponent, {
       width: '450px',
       data: {

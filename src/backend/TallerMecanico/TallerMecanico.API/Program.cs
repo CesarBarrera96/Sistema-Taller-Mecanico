@@ -113,6 +113,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<LicenciaMiddleware>();
 
 app.UseCors("AllowAngular");
 

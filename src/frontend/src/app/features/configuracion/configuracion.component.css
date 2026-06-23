@@ -14,6 +14,22 @@
   color: #001a3a;
 }
 
+.config-grid {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.config-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.config-licencia {
+  width: 340px;
+  flex-shrink: 0;
+}
+
 .config-form {
   display: flex;
   flex-direction: column;
@@ -105,4 +121,229 @@
   text-align: center;
   padding: 24px;
   color: rgba(0, 0, 0, 0.54);
+}
+
+.licencia-card {
+  position: sticky;
+  top: 80px;
+}
+
+.licencia-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(0, 86, 176, 0.12);
+}
+
+.licencia-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #001a3a;
+}
+
+.licencia-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  color: #1d4ed8;
+}
+
+.licencia-status-activa {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.status-badge-activa {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #ecfdf5;
+  color: #065f46;
+  font-weight: 600;
+  font-size: 14px;
+  width: fit-content;
+}
+
+.status-badge-activa mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #059669;
+}
+
+.licencia-fecha {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fecha-label {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.54);
+  font-weight: 500;
+}
+
+.fecha-valor {
+  font-size: 16px;
+  font-weight: 600;
+  color: #001a3a;
+}
+
+.licencia-proximo-vencer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.licencia-proximo-vencer mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #f59e0b;
+}
+
+.licencia-status-vencida {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.status-badge-vencida {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #fef2f2;
+  color: #991b1b;
+  font-weight: 600;
+  font-size: 14px;
+  width: fit-content;
+}
+
+.status-badge-vencida mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  color: #dc2626;
+}
+
+.reloj-msg {
+  font-size: 13px;
+  color: #dc2626;
+  line-height: 1.5;
+  margin: 0;
+  padding: 8px 12px;
+  background: #fef2f2;
+  border-radius: 6px;
+}
+
+.licencia-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.btn-activar {
+  font-weight: 600 !important;
+  letter-spacing: 0.3px;
+}
+
+.licencia-ayuda {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ayuda-text {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 0;
+  font-weight: 500;
+}
+
+.ayuda-botones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-whatsapp,
+.btn-mercadolibre {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.btn-whatsapp {
+  background: #16a34a;
+  color: #ffffff;
+  border-color: #16a34a;
+}
+
+.btn-whatsapp:hover {
+  background: #15803d;
+  border-color: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.btn-whatsapp mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+.btn-mercadolibre {
+  background: #f59e0b;
+  color: #422006;
+  border-color: #f59e0b;
+}
+
+.btn-mercadolibre:hover {
+  background: #d97706;
+  border-color: #d97706;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.btn-mercadolibre mat-icon {
+  font-size: 22px;
+  width: 22px;
+  height: 22px;
+}
+
+@media (max-width: 900px) {
+  .config-grid {
+    flex-direction: column-reverse;
+  }
+
+  .config-licencia {
+    width: 100%;
+  }
 }

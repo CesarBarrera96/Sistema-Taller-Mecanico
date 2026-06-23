@@ -29,6 +29,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IConfiguracionTallerService, ConfiguracionTallerService>();
         services.AddScoped<IFacturaPdfService, FacturaPdfService>();
+        services.AddScoped<ILicenciaService, LicenciaService>();
 
         return services;
     }

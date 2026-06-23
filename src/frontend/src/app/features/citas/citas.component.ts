@@ -23,6 +23,7 @@ import { Cita, CreateCitaDto, UpdateCitaDto, EstatusCita } from '../../models/ci
 import { Cliente } from '../../models/cliente.model';
 import { Vehiculo } from '../../models/vehiculo.model';
 import { Empleado } from '../../models/empleado.model';
+import { LicenciaService } from '../../services/licencia.service';
 
 @Component({
   selector: 'app-citas',
@@ -38,6 +39,7 @@ export class CitasComponent implements OnInit {
   private empleadoService = inject(EmpleadoService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private licenciaService = inject(LicenciaService);
   readonly EstatusCitaS = EstatusCita;
 
   datos: Cita[] = [];
@@ -81,6 +83,7 @@ export class CitasComponent implements OnInit {
   limpiarFiltro(): void { this.filtroFecha = null; this.cargar(); }
 
   cambiarEstatus(cita: Cita, estatus: EstatusCita): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dto: UpdateCitaDto = { estatus };
     this.service.update(cita.id, dto).subscribe({
       next: () => { this.snackBar.open('Estatus actualizado', 'OK', { duration: 3000 }); this.cargar(); },
@@ -89,6 +92,7 @@ export class CitasComponent implements OnInit {
   }
 
   convertirAOrden(cita: Cita): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     if (confirm('¿Convertir esta cita en orden de trabajo?')) {
       this.service.convertirAOrden(cita.id).subscribe({
         next: () => { this.snackBar.open('Orden de trabajo creada', 'OK', { duration: 3000 }); this.cargar(); },
@@ -98,6 +102,7 @@ export class CitasComponent implements OnInit {
   }
 
   abrirDialogo(cita?: Cita): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(CitasDialogComponent, {
       width: '500px',
       data: {

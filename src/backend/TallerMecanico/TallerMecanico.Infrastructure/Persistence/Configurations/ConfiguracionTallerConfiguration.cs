@@ -16,5 +16,8 @@ public class ConfiguracionTallerConfiguration : IEntityTypeConfiguration<Configu
         builder.Property(c => c.Direccion).HasMaxLength(500);
         builder.Property(c => c.LeyendaPiePagina).HasMaxLength(300);
         builder.Property(c => c.LogoRuta).HasMaxLength(500);
+        builder.Property(c => c.ClaveLicencia).HasMaxLength(2000);
+        builder.Property(c => c.FechaExpiracionLicencia);
+        builder.Property(c => c.UltimoAccesoRegistrado);
     }
 }

@@ -14,6 +14,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ClienteService } from '../../services/cliente.service';
 import { Cliente, CreateClienteDto } from '../../models/cliente.model';
 import { HttpErrorResponse } from '@angular/common/http';
+import { LicenciaService } from '../../services/licencia.service';
 
 @Component({
   selector: 'app-clientes',
@@ -26,6 +27,7 @@ export class ClientesComponent implements OnInit {
   private service = inject(ClienteService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private licenciaService = inject(LicenciaService);
 
   datos: Cliente[] = [];
   datosFiltrados: Cliente[] = [];
@@ -54,6 +56,7 @@ export class ClientesComponent implements OnInit {
   }
 
   toggleActivo(cliente: Cliente): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     this.service.toggleActivo(cliente.id).subscribe({
       next: () => { this.snackBar.open(cliente.activo ? 'Cliente desactivado' : 'Cliente activado', 'OK', { duration: 3000 }); this.cargar(); },
       error: (e: HttpErrorResponse) => this.snackBar.open(this.extraerError(e), 'OK', { duration: 5000 })
@@ -61,6 +64,7 @@ export class ClientesComponent implements OnInit {
   }
 
   abrirDialogo(cliente?: Cliente): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(ClientesDialogComponent, {
       width: '500px',
       data: {

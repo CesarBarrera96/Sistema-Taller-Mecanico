@@ -42,3 +42,7 @@ VALUES (1, 'Juan', 'Pérez', 'García', '555-111-2222', 'juan.perez@email.com', 
 -- Vehículo de ejemplo
 INSERT OR IGNORE INTO Vehiculos (Id, ClienteId, Marca, Modelo, Anio, Color, Placas, VIN, Kilometraje, FechaCreacion, FechaActualizacion)
 VALUES (1, 1, 'Toyota', 'Corolla', 2022, 'Blanco', 'ABC-123', '1HGBH41JXMN109186', 15000, datetime('now'), datetime('now'));
+
+-- Configuración inicial con licencia vacía (vencida por defecto)
+INSERT OR IGNORE INTO ConfiguracionTaller (Id, Nombre, NombreImpuesto, PorcentajeImpuesto, FechaCreacion, FechaActualizacion)
+VALUES (1, 'Taller Mecanico', 'IVA', 16, datetime('now'), datetime('now'));

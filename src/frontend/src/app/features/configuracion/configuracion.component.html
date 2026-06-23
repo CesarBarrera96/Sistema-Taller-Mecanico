@@ -2,83 +2,161 @@
   <h1>Configuracion</h1>
 </div>
 
-<mat-card *ngIf="!loading">
-  <mat-card-content>
-    <form [formGroup]="form" (ngSubmit)="guardar()" class="config-form">
+<div class="config-grid">
+  <div class="config-main">
+    <mat-card *ngIf="!loading">
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="guardar()" class="config-form">
 
-      <div class="logo-section">
-        <label class="logo-label">Logo del Taller</label>
-        <div class="logo-preview-container">
-          <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" class="logo-preview" />
-          <img *ngIf="!previewUrl && hasLogo && savedLogoUrl" [src]="savedLogoUrl" alt="Logo actual" class="logo-preview" (error)="hasLogo = false" />
-          <div *ngIf="!previewUrl && (!hasLogo || !savedLogoUrl)" class="logo-placeholder">
-            <mat-icon class="placeholder-icon">build</mat-icon>
-            <span>Sin logo</span>
+          <div class="logo-section">
+            <label class="logo-label">Logo del Taller</label>
+            <div class="logo-preview-container">
+              <img *ngIf="previewUrl" [src]="previewUrl" alt="Preview" class="logo-preview" />
+              <img *ngIf="!previewUrl && hasLogo && savedLogoUrl" [src]="savedLogoUrl" alt="Logo actual" class="logo-preview" (error)="hasLogo = false" />
+              <div *ngIf="!previewUrl && (!hasLogo || !savedLogoUrl)" class="logo-placeholder">
+                <mat-icon class="placeholder-icon">build</mat-icon>
+                <span>Sin logo</span>
+              </div>
+            </div>
+            <div class="logo-actions">
+              <button mat-raised-button type="button" (click)="fileInput.click()">
+                <mat-icon>upload</mat-icon> Seleccionar Logo
+              </button>
+              <button *ngIf="selectedFile" mat-icon-button type="button" color="warn" (click)="removeFile()" matTooltip="Quitar seleccion">
+                <mat-icon>close</mat-icon>
+              </button>
+              <button *ngIf="!selectedFile && hasLogo" mat-icon-button type="button" color="warn" (click)="eliminarLogo()" matTooltip="Eliminar logo">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <input id="logoInput" type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden />
+              <span *ngIf="selectedFile" class="file-name">{{ selectedFile.name }}</span>
+            </div>
           </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Nombre del Taller</mat-label>
+            <input matInput formControlName="nombre" maxlength="200" placeholder="Ej: Taller Mecanico Lopez" />
+            <mat-error *ngIf="form.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>RFC</mat-label>
+            <input matInput formControlName="rfc" maxlength="20" placeholder="Ej: XAXX010101000" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Telefono</mat-label>
+            <input matInput formControlName="telefono" maxlength="20" placeholder="Ej: 555-123-4567" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Direccion Completa</mat-label>
+            <textarea matInput formControlName="direccion" maxlength="500" rows="3" placeholder="Ej: Av. Principal 123, Col. Centro, Ciudad"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Leyenda de Pie de Pagina</mat-label>
+            <input matInput formControlName="leyendaPiePagina" maxlength="300" placeholder="Ej: Gracias por su preferencia" />
+          </mat-form-field>
+
+          <div class="impuesto-row">
+            <mat-form-field appearance="outline" class="impuesto-nombre">
+              <mat-label>Nombre del Impuesto</mat-label>
+              <input matInput formControlName="nombreImpuesto" maxlength="30" placeholder="Ej: IVA" />
+              <mat-error *ngIf="form.get('nombreImpuesto')?.hasError('required')">El nombre del impuesto es obligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="impuesto-porcentaje">
+              <mat-label>Porcentaje (%)</mat-label>
+              <input matInput type="number" formControlName="porcentajeImpuesto" min="0" max="100" step="0.01" placeholder="Ej: 16" />
+              <mat-error *ngIf="form.get('porcentajeImpuesto')?.hasError('required')">El porcentaje es obligatorio</mat-error>
+              <mat-error *ngIf="form.get('porcentajeImpuesto')?.hasError('min')">No puede ser negativo</mat-error>
+              <mat-error *ngIf="form.get('porcentajeImpuesto')?.hasError('max')">Maximo 100%</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || saving">
+              <mat-icon>save</mat-icon> {{ saving ? 'Guardando...' : 'Guardar' }}
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="config-licencia">
+    <mat-card class="licencia-card">
+      <mat-card-content>
+        <div class="licencia-header">
+          <mat-icon class="licencia-icon">vpn_key</mat-icon>
+          <h2>Licencia Anual</h2>
         </div>
-        <div class="logo-actions">
-          <button mat-raised-button type="button" (click)="fileInput.click()">
-            <mat-icon>upload</mat-icon> Seleccionar Logo
-          </button>
-          <button *ngIf="selectedFile" mat-icon-button type="button" color="warn" (click)="removeFile()" matTooltip="Quitar seleccion">
-            <mat-icon>close</mat-icon>
-          </button>
-          <button *ngIf="!selectedFile && hasLogo" mat-icon-button type="button" color="warn" (click)="eliminarLogo()" matTooltip="Eliminar logo">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <input id="logoInput" type="file" #fileInput accept="image/*" (change)="onFileSelected($event)" hidden />
-          <span *ngIf="selectedFile" class="file-name">{{ selectedFile.name }}</span>
-        </div>
-      </div>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Nombre del Taller</mat-label>
-        <input matInput formControlName="nombre" maxlength="200" placeholder="Ej: Taller Mecanico Lopez" />
-        <mat-error *ngIf="form.get('nombre')?.hasError('required')">El nombre es obligatorio</mat-error>
-      </mat-form-field>
+        @if (licenciaActiva) {
+          <div class="licencia-status-activa">
+            <div class="status-badge-activa">
+              <mat-icon>check_circle</mat-icon>
+              <span>Activa</span>
+            </div>
+            @if (fechaExpiracionLicencia) {
+              <div class="licencia-fecha">
+                <span class="fecha-label">Valida hasta:</span>
+                <span class="fecha-valor">{{ fechaExpiracionLicencia }}</span>
+              </div>
+            }
+            @if (diasRestantes !== null && diasRestantes <= 30) {
+              <div class="licencia-proximo-vencer">
+                <mat-icon>schedule</mat-icon>
+                @if (diasRestantes > 0) {
+                  <span>Quedan {{ diasRestantes }} dia{{ diasRestantes !== 1 ? 's' : '' }}</span>
+                } @else if (minutosRestantes !== null && minutosRestantes > 0) {
+                  <span>Quedan {{ minutosRestantes }} minuto{{ minutosRestantes !== 1 ? 's' : '' }}</span>
+                } @else {
+                  <span>Por vencer</span>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="licencia-status-vencida">
+            <div class="status-badge-vencida">
+              <mat-icon>error</mat-icon>
+              <span>{{ estadoLicencia === 'RelojAtrasado' ? 'Reloj alterado' : 'Vencida' }}</span>
+            </div>
+            @if (estadoLicencia === 'RelojAtrasado') {
+              <p class="reloj-msg">Se detecto una inconsistencia en la fecha del sistema. Por favor, corrija la fecha de su equipo y vuelva a iniciar sesion.</p>
+            }
+          </div>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>RFC</mat-label>
-        <input matInput formControlName="rfc" maxlength="20" placeholder="Ej: XAXX010101000" />
-      </mat-form-field>
+          <div class="licencia-input-section">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Clave de Activacion</mat-label>
+              <input matInput [(ngModel)]="licenciaToken" placeholder="Pegue su clave aqui" [disabled]="activandoLicencia" />
+              <mat-icon matSuffix>vpn_key</mat-icon>
+            </mat-form-field>
+            <button mat-raised-button color="primary" class="btn-activar full-width" (click)="activarLicencia()" [disabled]="activandoLicencia">
+              <mat-icon>verified</mat-icon>
+              {{ activandoLicencia ? 'Activando...' : 'Activar Licencia' }}
+            </button>
+          </div>
 
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Telefono</mat-label>
-        <input matInput formControlName="telefono" maxlength="20" placeholder="Ej: 555-123-4567" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Direccion Completa</mat-label>
-        <textarea matInput formControlName="direccion" maxlength="500" rows="3" placeholder="Ej: Av. Principal 123, Col. Centro, Ciudad"></textarea>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Leyenda de Pie de Pagina</mat-label>
-        <input matInput formControlName="leyendaPiePagina" maxlength="300" placeholder="Ej: Gracias por su preferencia" />
-      </mat-form-field>
-
-      <div class="impuesto-row">
-        <mat-form-field appearance="outline" class="impuesto-nombre">
-          <mat-label>Nombre del Impuesto</mat-label>
-          <input matInput formControlName="nombreImpuesto" maxlength="30" placeholder="Ej: IVA" />
-          <mat-error *ngIf="form.get('nombreImpuesto')?.hasError('required')">El nombre del impuesto es obligatorio</mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="impuesto-porcentaje">
-          <mat-label>Porcentaje (%)</mat-label>
-          <input matInput type="number" formControlName="porcentajeImpuesto" min="0" max="100" step="0.01" placeholder="Ej: 16" />
-          <mat-error *ngIf="form.get('porcentajeImpuesto')?.hasError('required')">El porcentaje es obligatorio</mat-error>
-          <mat-error *ngIf="form.get('porcentajeImpuesto')?.hasError('min')">No puede ser negativo</mat-error>
-          <mat-error *ngIf="form.get('porcentajeImpuesto')?.hasError('max')">Maximo 100%</mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="form-actions">
-        <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || saving">
-          <mat-icon>save</mat-icon> {{ saving ? 'Guardando...' : 'Guardar' }}
-        </button>
-      </div>
-    </form>
-  </mat-card-content>
-</mat-card>
+          <div class="licencia-ayuda">
+            <p class="ayuda-text">Necesita renovar su licencia?</p>
+            <div class="ayuda-botones">
+              <a class="btn-whatsapp" (click)="openWhatsapp()">
+                <mat-icon>chat</mat-icon>
+                Solicitar clave por WhatsApp
+              </a>
+              <a class="btn-mercadolibre" (click)="openMercadoLibre()">
+                <mat-icon>shopping_cart</mat-icon>
+                Pagar anualidad en Mercado Libre
+              </a>
+            </div>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
 
 <div *ngIf="loading" class="loading">Cargando...</div>

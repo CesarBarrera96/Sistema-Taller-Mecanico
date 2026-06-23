@@ -49,7 +49,11 @@
       <mat-icon matListItemIcon>settings</mat-icon>
       <span matListItemTitle>Configuracion</span>
     </a>
-  </mat-nav-list>
+   </mat-nav-list>
+
+   <div class="sidenav-footer">
+     <a class="terminos-link" (click)="showTerminos.set(true)">Terminos y Condiciones</a>
+   </div>
 </mat-sidenav>
 
 <mat-sidenav-content class="main-content">
@@ -68,4 +72,56 @@
     <router-outlet />
   </div>
 </mat-sidenav-content>
+
 </mat-sidenav-container>
+
+@if (licenciaService.showDialog()) {
+  <div class="licencia-overlay" (click)="licenciaService.dismissDialog()">
+    <div class="licencia-dialog" (click)="$event.stopPropagation()">
+      <mat-icon class="licencia-dialog-icon">directions_car</mat-icon>
+      <h2>&#161;Tu suscripci&oacute;n ha concluido!</h2>
+      <p>Para seguir registrando nuevas &oacute;rdenes de trabajo y facturas, es necesario renovar tu licencia anual. No te preocupes, toda la informaci&oacute;n de tu taller sigue guardada y segura en modo de lectura.</p>
+      <button class="licencia-dialog-btn" (click)="goToConfiguracion()">
+        <mat-icon>settings</mat-icon> Ir a Configuraci&oacute;n
+      </button>
+    </div>
+  </div>
+}
+
+@if (showTerminos()) {
+  <div class="terminos-overlay" (click)="showTerminos.set(false)">
+    <div class="terminos-dialog" (click)="$event.stopPropagation()">
+      <div class="terminos-header">
+        <h2>Terminos y Condiciones</h2>
+        <button mat-icon-button (click)="showTerminos.set(false)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="terminos-body">
+        <h3>1. Licencia de Uso</h3>
+        <p>El presente software se otorga bajo una licencia anual de uso, la cual permite al titular acceder y utilizar todas las funcionalidades del sistema durante el periodo vigente de la suscripcion.</p>
+
+        <h3>2. Vigencia</h3>
+        <p>La licencia tiene una vigencia de un (1) ano a partir de la fecha de activacion. Al concluir este periodo, el sistema pasara automaticamente a modo de solo lectura, permitiendo consultar la informacion historica pero no realizar nuevas operaciones de registro, edicion o eliminacion.</p>
+
+        <h3>3. Intransferibilidad</h3>
+        <p>La licencia es intransferible y queda vinculada al establecimiento registrado al momento de la activacion. Queda estrictamente prohibido ceder, sublicenciar, distribuir o compartir la clave de activacion con terceros.</p>
+
+        <h3>4. Uso exclusivo por establecimiento</h3>
+        <p>Cada licencia es valida unicamente para un solo establecimiento o sucursal. En caso de requerir el sistema en multiples ubicaciones, sera necesario adquirir una licencia independiente para cada una.</p>
+
+        <h3>5. Renovacion</h3>
+        <p>Para continuar utilizando el sistema con todas sus funcionalidades despues del vencimiento, el usuario debera renovar su licencia anual. Los datos almacenados se conservaran intactos y estaran disponibles inmediatamente tras la renovacion.</p>
+
+        <h3>6. Responsabilidad</h3>
+        <p>El proveedor del software no se hace responsable por perdida de datos derivada del uso indebido del sistema, fallas en el equipo del usuario, o modificar la fecha y hora del sistema con el fin de eludir los controles de licencia. Cualquier intento de manipulacion del mecanismo de licenciamiento sera motivo de suspension inmediata del servicio.</p>
+
+        <h3>7. Aceptacion</h3>
+        <p>Al activar y utilizar el software, el usuario acepta en su totalidad los presentes terminos y condiciones. El uso continuo del sistema despues de cualquier actualizacion de estos terminos constituye la aceptacion de los mismos.</p>
+      </div>
+      <div class="terminos-footer">
+        <button class="terminos-close-btn" (click)="showTerminos.set(false)">Cerrar</button>
+      </div>
+    </div>
+  </div>
+}

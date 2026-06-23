@@ -17,6 +17,7 @@ import { OrdenService } from '../../services/orden.service';
 import { RefaccionService } from '../../services/refaccion.service';
 import { OrdenTrabajo, CreateOrdenTrabajoDto, UpdateOrdenTrabajoDto, EstatusOrden } from '../../models/orden-trabajo.model';
 import { Refaccion, InventarioMovimientoDto } from '../../models/refaccion.model';
+import { LicenciaService } from '../../services/licencia.service';
 
 @Component({
   selector: 'app-ordenes',
@@ -30,6 +31,7 @@ export class OrdenesComponent implements OnInit {
   private refaccionService = inject(RefaccionService);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
+  private licenciaService = inject(LicenciaService);
   readonly EstatusOrdenS = EstatusOrden;
 
   datos: OrdenTrabajo[] = [];
@@ -53,6 +55,7 @@ export class OrdenesComponent implements OnInit {
   filtrarEstatus(): void { this.cargar(); }
 
   cambiarEstatus(orden: OrdenTrabajo, estatus: EstatusOrden): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     if (estatus === EstatusOrden.Entregada) {
       const dto: UpdateOrdenTrabajoDto = { estatus };
       this.service.update(orden.id, dto).subscribe({
@@ -104,6 +107,7 @@ export class OrdenesComponent implements OnInit {
   }
 
   abrirDialogo(orden?: OrdenTrabajo): void {
+    if (!this.licenciaService.canWrite()) { this.licenciaService.showLicenciaExpiredDialog(); return; }
     const dialogRef = this.dialog.open(OrdenesDialogComponent, {
       width: '600px',
       data: {
