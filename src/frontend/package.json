@@ -1,12 +1,58 @@
 {
-  "name": "frontend",
-  "version": "0.0.0",
+  "name": "taller-mecanico",
+  "version": "1.0.0",
+  "main": "electron/main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href ./",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "electron:start": "ng build --base-href ./ && electron .",
+    "electron:dev": "electron .",
+    "publish:backend": "dotnet publish ../backend/TallerMecanico/TallerMecanico.API/TallerMecanico.API.csproj -c Release -r win-x64 --self-contained true -o electron/backend /p:PublishSingleFile=false /p:PublishTrimmed=false && xcopy /Y \"..\\backend\\TallerMecanico\\TallerMecanico.API\\TallerMecanico.db\" \"electron\\backend\\\"",
+    "electron:build": "ng build --base-href ./ && npm run publish:backend && electron-builder"
+  },
+  "build": {
+    "appId": "com.tallermecanico.app",
+    "productName": "Taller Mecanico",
+    "copyright": "Copyright © 2026 Taller Mecanico",
+    "directories": {
+      "output": "dist-desktop"
+    },
+    "files": [
+      "dist/frontend/**/*",
+      "electron/main.js",
+      "electron/taller-icon.ico"
+    ],
+    "extraResources": [
+      {
+        "from": "electron/backend",
+        "to": "backend",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "electron/taller-icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "electron/taller-icon.ico",
+      "uninstallerIcon": "electron/taller-icon.ico",
+      "installerHeaderIcon": "electron/taller-icon.ico",
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    }
   },
   "prettier": {
     "overrides": [
@@ -40,12 +86,17 @@
     "@angular/cli": "^20.1.4",
     "@angular/compiler-cli": "^20.1.0",
     "@types/jasmine": "~5.1.0",
+    "better-sqlite3": "^12.11.1",
+    "electron": "^42.5.0",
+    "electron-builder": "^26.15.3",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "png-to-ico": "^3.0.1",
+    "sharp": "^0.35.2",
     "typescript": "~5.8.2"
   }
 }

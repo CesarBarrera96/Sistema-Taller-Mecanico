@@ -3,8 +3,11 @@ node_modules/
 
 # Build output
 dist/
+dist-desktop/
+release/
 bin/
 obj/
+electron/backend/
 
 # SQLite database files
 *.db

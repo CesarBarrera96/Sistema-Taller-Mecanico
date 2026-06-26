@@ -147,7 +147,7 @@ export class OrdenesComponent implements OnInit {
   }
 
   siguienteEstatus(orden: OrdenTrabajo): EstatusOrden | null {
-    const flow: EstatusOrden[] = [EstatusOrden.Recibida, EstatusOrden.Diagnostico, EstatusOrden.EnProceso, EstatusOrden.Terminada, EstatusOrden.Entregada];
+    const flow: EstatusOrden[] = [EstatusOrden.Recibida, EstatusOrden.Diagnostico, EstatusOrden.EnProceso, EstatusOrden.EsperaRefacciones, EstatusOrden.Terminada, EstatusOrden.Entregada];
     const idx = flow.indexOf(orden.estatus);
     return idx >= 0 && idx < flow.length - 1 ? flow[idx + 1] : null;
   }
@@ -186,9 +186,9 @@ export class OrdenesComponent implements OnInit {
             <div class="refaccion-add-row">
               <mat-form-field appearance="outline" class="refaccion-select">
                 <mat-label>Refaccion</mat-label>
-                <mat-select [(ngModel)]="refaccionSeleccionada" [ngModelOptions]="{standalone: true}">
+                <mat-select [(ngModel)]="refaccionSeleccionadaId" [ngModelOptions]="{standalone: true}">
                   @for (r of refaccionesDisponibles; track r.id) {
-                    <mat-option [value]="r">{{ r.nombre }} ({{ r.codigo }}) - {{ r.precioVenta | currency:'MXN':'symbol':'1.2-2' }} | Stock: {{ r.stockActual }}</mat-option>
+                    <mat-option [value]="r.id">{{ r.nombre }} ({{ r.codigo }}) - {{ r.precioVenta | currency:'MXN':'symbol':'1.2-2' }} | Stock: {{ r.stockActual }}</mat-option>
                   }
                 </mat-select>
               </mat-form-field>
@@ -196,7 +196,7 @@ export class OrdenesComponent implements OnInit {
                 <mat-label>Cantidad</mat-label>
                 <input matInput type="number" [(ngModel)]="cantidadSeleccionada" [ngModelOptions]="{standalone: true}" min="1" step="1">
               </mat-form-field>
-              <button mat-icon-button color="primary" type="button" (click)="agregarRefaccion()" [disabled]="!refaccionSeleccionada || cantidadSeleccionada < 1" matTooltip="Agregar refaccion">
+              <button mat-icon-button color="primary" type="button" (click)="agregarRefaccion()" [disabled]="!refaccionSeleccionadaId || cantidadSeleccionada < 1" matTooltip="Agregar refaccion">
                 <mat-icon>add_circle</mat-icon>
               </button>
             </div>
@@ -264,10 +264,15 @@ export class MontoDialogComponent {
   totalActual: number;
   refacciones: Refaccion[];
   mostrarRefacciones = false;
-  refaccionSeleccionada: Refaccion | null = null;
+  refaccionSeleccionadaId: number | null = null;
   cantidadSeleccionada = 1;
   refaccionesAgregadas: { refaccionId: number; nombre: string; codigo: string; cantidad: number; precioUnitario: number }[] = [];
   private ref = inject(MatDialogRef<MontoDialogComponent>);
+
+  get refaccionSeleccionada(): Refaccion | null {
+    if (this.refaccionSeleccionadaId === null) return null;
+    return this.refacciones.find(r => r.id === this.refaccionSeleccionadaId) ?? null;
+  }
 
   constructor() {
     const data = inject(MAT_DIALOG_DATA) as { estatus: EstatusOrden; totalActual: number; refacciones: Refaccion[] };
@@ -294,23 +299,24 @@ export class MontoDialogComponent {
   }
 
   agregarRefaccion(): void {
-    if (!this.refaccionSeleccionada || this.cantidadSeleccionada < 1) return;
-    if (this.cantidadSeleccionada > this.refaccionSeleccionada.stockActual) return;
-    this.refaccionesAgregadas.push({
-      refaccionId: this.refaccionSeleccionada.id,
-      nombre: this.refaccionSeleccionada.nombre,
-      codigo: this.refaccionSeleccionada.codigo,
+    const sel = this.refaccionSeleccionada;
+    if (!sel || this.cantidadSeleccionada < 1) return;
+    if (this.cantidadSeleccionada > sel.stockActual) return;
+    this.refaccionesAgregadas = [...this.refaccionesAgregadas, {
+      refaccionId: sel.id,
+      nombre: sel.nombre,
+      codigo: sel.codigo,
       cantidad: this.cantidadSeleccionada,
-      precioUnitario: this.refaccionSeleccionada.precioVenta,
-    });
+      precioUnitario: sel.precioVenta,
+    }];
     const montoRefacciones = this.totalRefacciones;
     this.form.patchValue({ monto: montoRefacciones });
-    this.refaccionSeleccionada = null;
+    this.refaccionSeleccionadaId = null;
     this.cantidadSeleccionada = 1;
   }
 
   quitarRefaccion(index: number): void {
-    this.refaccionesAgregadas.splice(index, 1);
+    this.refaccionesAgregadas = this.refaccionesAgregadas.filter((_, i) => i !== index);
     const montoRefacciones = this.totalRefacciones;
     this.form.patchValue({ monto: montoRefacciones });
   }

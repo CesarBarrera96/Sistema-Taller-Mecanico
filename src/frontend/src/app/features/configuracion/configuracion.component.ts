@@ -36,7 +36,7 @@ export class ConfiguracionComponent implements OnInit {
 
   readonly whatsappNumber = '528116190278';
   readonly whatsappMessage = encodeURIComponent('Hola, necesito una licencia del Sistema Taller Mecanico. Me podrias proporcionar una clave de activacion?');
-  readonly mercadoLibreUrl = 'https://www.mercadolibre.com.mx';
+  readonly mercadoLibreUrl = 'https://articulo.mercadolibre.com.mx/MLM-3045884059-sistema-gestion-taller-mecanico-_JM';
 
   constructor() {
     this.form = this.fb.group({
